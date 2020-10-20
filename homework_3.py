@@ -10,10 +10,10 @@ def catalog_finder(url_list):
 
 
 def get_str_center(input_str):
-    if len(input_str) % 2 == 0:
-        output_str = input_str[(len(input_str) // 2) - 1:(len(input_str) // 2) + 1]
-    else:
+    if len(input_str) % 2:
         output_str = input_str[(len(input_str) // 2) - 1:(len(input_str) // 2) + 2]
+    else:
+        output_str = input_str[(len(input_str) // 2) - 1:(len(input_str) // 2) + 1]
     return output_str
 
 
@@ -31,6 +31,7 @@ def mix_strings(str1, str2):
 def even_int_generator():
     even_int_list = [i for i in range(0, 100) if not i % 2]
     return even_int_list
+
 
 
 
