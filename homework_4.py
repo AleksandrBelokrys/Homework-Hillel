@@ -3,7 +3,7 @@
 def validate_password(*password):
     my_list = ["содержит запрещенные символы", "количество букв должно быть четным",
                "количество цифр должно быть нечетным"]
-    my_list_error = []
+    my_list_error = list()
     password = str(input("Введите пароль:"))
     if not _validate_symbols(password):
         my_list_error.append(my_list[0])
