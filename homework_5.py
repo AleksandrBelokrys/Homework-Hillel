@@ -116,7 +116,7 @@ def _format_output(data):
     max_len_birth = 10
     max_len_email = _find_max_length(data, 'email')
 
-    horizontal_line_len = max_len_first_name + max_len_last_name + max_len_birth + max_len_email +offset
+    horizontal_line_len = max_len_first_name + max_len_last_name + max_len_birth + max_len_email + offset
     horizontal_line = '-' * horizontal_line_len
     table = horizontal_line
 
