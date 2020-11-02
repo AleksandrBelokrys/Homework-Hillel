@@ -40,10 +40,9 @@ def _validate_numbers_odd(input_str):
         return False
 
 
-print(validate_password())
+# print(validate_password())
 
-
-
+print(_validate_letters_even('пппр'))
 
 
 

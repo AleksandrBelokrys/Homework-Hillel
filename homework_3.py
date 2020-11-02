@@ -35,8 +35,7 @@ def even_int_generator():
 
 
 
-
-
+print(even_int_generator())
 
 
 
