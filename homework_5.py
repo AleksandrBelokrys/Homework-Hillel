@@ -121,9 +121,9 @@ def _format_output(data):
     table = horizontal_line
 
     table += '\n'
-    table += f"| {'first_name':{max_len_first_name}} "
+    table += f"| {'first_name':^{max_len_first_name}} "
     table += f"| {'last_name':^{max_len_last_name}} "
-    table += f"| {'birth_name':{max_len_birth}} "
+    table += f"| {'birth_name':^{max_len_birth}} "
     table += f"| {'email':^{max_len_email}} |"
     table += '\n'
     table += horizontal_line
