@@ -40,11 +40,12 @@ print(get_text("qwerty"))
 def log_reading(func):
 
     def wrapper(*args):
-        new_list = func(*args)
-        for value in new_list:
+        files_list = func(*args)
+        for value in files_list:
             if ".log" in value:
-                f = open(value)
+                f = open(value, "r")
                 data = f.read()
+                f.close()
                 return data
 
     return wrapper
