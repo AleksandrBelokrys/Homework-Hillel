@@ -23,7 +23,7 @@ class IpHandler:
         """Returns a list of IPs without first octets (127.0.0.1 -> .0.0.1)"""
         ips_without_first_octets = list()
         for value in self._ipList:
-            value = value.split(".")  # или value = value.split(".", 1)[1]
+            value = value.split(".")  # или value = value.split(".", 1)[1] какой вариант лучше?
             del value[0]              # ips_without_first_octets.append(".".join(value))
             ips_without_first_octets.append(".".join(value))
         return ips_without_first_octets
@@ -114,8 +114,7 @@ print(conn.password)
 
 
 
-my_str = '10.11.12.13'
-print(my_str.split(".", 1))
+
 
 
 
