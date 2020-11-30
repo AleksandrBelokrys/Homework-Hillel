@@ -1,5 +1,5 @@
 import uuid
-
+from logger import logger
 
 class Supply:
     def __init__(self, item, supplier, amount):
@@ -7,6 +7,7 @@ class Supply:
         self.item = item
         self.supplier = supplier
         self.amount = amount
+        logger.info(f"A supply '{self}' was created.")
 
     def __str__(self):
         return f"{self.id}: {self.item} by {self.supplier}"

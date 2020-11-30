@@ -1,4 +1,5 @@
 import uuid
+from logger import logger
 
 
 class User:
@@ -7,6 +8,7 @@ class User:
         self._username = username
         self._userpass = userpass
         self.email = email
+        logger.info(f"An user '{self._username}' was created.")
 
     @property
     def username(self):
@@ -15,3 +17,5 @@ class User:
     @property
     def userpass(self):
         return '*' * len(self._userpass)
+
+

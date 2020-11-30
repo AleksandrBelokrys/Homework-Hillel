@@ -1,5 +1,6 @@
 import uuid
 from user import User
+from logger import logger
 
 
 class Administrator(User):
@@ -10,6 +11,8 @@ class Administrator(User):
 
     def approve_review(self, review):
         review.status = "Published"
+        logger.info(
+            f"Status of review '{review.text}' has been changed to 'published'.")
         return review
 
     def update_supply(self, suppliers_list):
@@ -29,6 +32,9 @@ class Administrator(User):
         for supply in self.supply:
             if supply.item == order.item and supply.amount >= order.amount:
                 order.status = 'Confirmed'
+                logger.info(
+                    f"Status of '{order}' has been changed to 'confirmed'.")
                 return order
         order.status = 'On hold'
+        logger.info(f"Status of '{order}' has been changed to 'on hold'.")
         return order

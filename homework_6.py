@@ -1,5 +1,4 @@
 
-
 def do_cache(maxsize=None):
     def decorator(func):
         cache = dict()
@@ -22,8 +21,8 @@ def my_func(x, y, v=5, b=3):
     return x * y * v * b
 
 
-print(my_func(5, 76, v=6, b=7))
-print(my_func(5, 76, v=6, b=7))
+print(my_func(5, 76, v=4, b=3))
+print(my_func(5, 76, v=6, b=3))
 
 
 

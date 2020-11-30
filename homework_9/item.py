@@ -1,5 +1,5 @@
 import uuid
-
+from logger import logger
 
 
 class Item:
@@ -9,6 +9,7 @@ class Item:
         self.description = description
         self.price = float(price)
         self.colors = colors
+        logger.info(f"A item '{self.title}' was created.")
 
 
     def __str__(self):
@@ -21,4 +22,3 @@ class Item:
 if __name__ == '__main__':
     i1 = Item("Banana", "Better than ever before", 799.0,
                 ("Golden", "Fresh Green"))
-    print(i1)

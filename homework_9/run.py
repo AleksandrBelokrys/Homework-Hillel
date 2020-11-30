@@ -25,9 +25,5 @@ item2 = Item("Best Banana", "Better than others", 899.0,
 
 customer1.add_review(item2, "very tasty", 5)
 reviews.append(customer1.add_review(item2, "very tasty", 5))
-print(reviews)
-print(customer1.reviews[0].status)
-print(admin1.approve_review(customer1.add_review(item2, "very tasty", 5)))
-
 
 

@@ -1,4 +1,5 @@
 import uuid
+from logger import logger
 
 
 class Review:
@@ -9,10 +10,15 @@ class Review:
         self.text = text
         self.status = "Moderation"
 
-        if isinstance(rating, int) and 1 <= rating <= 5:
+        if 1 <= int(rating) <= 5:
             self.rating = rating
+            logger.info(f"Rating of review '{self.text}' is beetwen 1 and 5.")
         else:
+            logger.error(
+                f"Rating of review {self.text} must to be beetwen 1 and 5!")
             raise ValueError('Rating must to be beetwen 1 and 5!')
+
+        logger.info(f"A review '{self.text}' was created.")
 
     def __str__(self):
         return f"Review {self.id} \n{self.customer.username} -> {self.item.title}:\
@@ -32,9 +38,9 @@ if __name__ == '__main__':
                   "guido@python.org", "09-09-1968")
     i1 = Item("Banana", "Better than ever before", 799.0,
               ("Golden", "Fresh Green"))
-    r1 = Review(c1, i1, 'So delicious', 4)
-    print(r1)
+    r1 = Review(c1, i1, 'So delicious', 5)
+
 
     a1.approve_review(r1)
-    print(r1)
+
 
