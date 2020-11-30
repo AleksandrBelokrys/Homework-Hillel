@@ -12,7 +12,7 @@ class Review:
 
         if 1 <= int(rating) <= 5:
             self.rating = rating
-            logger.info(f"Rating of review '{self.text}' is beetwen 1 and 5.")
+            logger.info(f"Rating of review '{self.text}' is {self.rating}.")
         else:
             logger.error(
                 f"Rating of review {self.text} must to be beetwen 1 and 5!")
@@ -39,8 +39,6 @@ if __name__ == '__main__':
     i1 = Item("Banana", "Better than ever before", 799.0,
               ("Golden", "Fresh Green"))
     r1 = Review(c1, i1, 'So delicious', 5)
-
-
     a1.approve_review(r1)
 
 
