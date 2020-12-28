@@ -17,7 +17,7 @@ def add_value(value):
 
 def add_operation(operation):
     if operation == 'x\u00b2':
-        operation = '**'
+        operation = '**2'
 
     value = calc.get()
 
