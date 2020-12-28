@@ -2,180 +2,144 @@ import tkinter as tk
 from tkinter import messagebox
 
 
-x = True
+def add_value(value):
+    digit = calc.get()
+
+    if digit[0] == '0' and value != '.' and len(digit) == 1:
+        digit = digit[1:]
+
+    if value == '.' and digit[-1] == '.':
+        digit = digit[:-1]
+
+    calc.delete(0, tk.END)
+    calc.insert(0, digit+value)
 
 
-def decor(func):
-    def dec(*args, **kwargs):
-        entry_field['state'] = tk.NORMAL
-        func(*args, **kwargs)
-        entry_field['state'] = tk.DISABLED
-    return dec
-
-
-@decor
-def add_digit(digit):
-    global x
-    value = entry_field.get()
-    if x:
-        if digit == '.' and value.count('.') == 1 and ('/' in value or '*' in value or '+' in value or '-' in value):
-            entry_field.delete(0, tk.END)
-            entry_field.insert(0, value + str(digit))
-        elif digit == '.' and value.count('.') == 1:
-            pass
-        elif digit == '.' and value.count('.') == 2:
-            entry_field.delete(0, tk.END)
-            entry_field.insert(0, value)
-        else:
-            if value[0] == '0' and digit == '.':
-                value = value
-            elif value[0] == '0' and len(value) == 1:
-                value = value[:-1]
-            entry_field.delete(0, tk.END)
-            entry_field.insert(0, value + str(digit))
-    else:
-        entry_field.delete(0, tk.END)
-        entry_field.insert(0, str(digit))
-        x = True
-
-
-@decor
 def add_operation(operation):
-    global x
-    value = entry_field.get()
-    if x:
-        if value[-1] in '÷x+-':
-            value = value[:-1]
-        elif '/' in value or '*' in value or '+' in value or '-' in value:
-            calculate()
-            value = entry_field.get()
-        entry_field.delete(0, tk.END)
-        entry_field.insert(0, value + operation)
+    if operation == 'x\u00b2':
+        operation = '**'
+
+    value = calc.get()
+
+    if value[-2:] == 'x\u00b2':
+        value = value[:-2]
+
+    elif value[-1] in "+-/*":
+        value = value[:-1]
+    elif '+' in value or '-' in value or '/' in value or '*' in value or '**' in value:
+        calculate()
+        value = calc.get()
+
+    calc.delete(0, tk.END)
+    calc.insert(0, value+operation)
+
+
+def add_clear(operation):
+    if operation == 'c':
+        calc.delete(0, tk.END)
+        calc.insert(0, '0')
     else:
-        entry_field.delete(0, tk.END)
-        entry_field.insert(0, value + operation)
-        x = True
+        value = calc.get()
+
+        if len(value) > 1:
+            calc.delete(0, tk.END)
+            calc.insert(0, value[:-1])
+        else:
+            calc.delete(0, tk.END)
+            calc.insert(0, '0')
 
 
-def make_digit_button(digit):
-    return tk.Button(text=digit, bg='#f1f3f4', font='arial', bd=5, command=lambda: add_digit(digit))
+def make_value_button(value):
+    return tk.Button(text=value, bd=5, font=("Arial", 14), command=lambda: add_value(value))
 
 
 def make_operation_button(operation):
-    return tk.Button(text=operation, bg='#dadce0', font='arial', fg='blue', bd=5,
+    return tk.Button(text=operation, bd=5, font=("Arial", 14), fg="red",
                      command=lambda: add_operation(operation))
 
 
-@decor
-def calculate():
-    value = entry_field.get()
-    if value[-1] in '/*+-':
-        value = value + value[:-1]
+def make_equally_button(operation):
+    return tk.Button(text=operation, bd=5, font=("Arial", 14), fg="red",
+                     command=lambda: calculate())
 
-    entry_field.delete(0, tk.END)
+
+def make_clear_button(operation):
+    return tk.Button(text=operation, bd=5, font=("Arial", 14), fg="red",
+                     command=lambda: add_clear(operation))
+
+
+def calculate():
+    value = calc.get()
+    if value[-1] in "+-/*":
+        value = value + value[:-1]
+    calc.delete(0, tk.END)
     try:
-        y = str(eval(value))
-        if y[-2::] == '.0':
-            y = y.rstrip('0').rstrip('.')
-        entry_field.insert(0, y)
+        calc.insert(0, round(eval(value), 4))
     except (NameError, SyntaxError):
         messagebox.showinfo('Attention', 'You only need to enter numbers')
-        entry_field.insert(0, 0)
+        calc.insert(0, '0')
     except ZeroDivisionError:
         messagebox.showinfo('Attention', 'You cannot divide by zero')
-        entry_field.insert(0, 0)
-
-
-def calculate_button():
-    calculate()
-    global x
-    x = False
-
-
-@decor
-def clear_entry_field():
-    entry_field.delete(0, tk.END)
-    entry_field.insert(0, '0')
-
-
-def make_calc_button(operation):
-    return tk.Button(text=operation, bg='#4285f4', font='arial', fg='white', bd=5, command=lambda: calculate_button())
+        calc.insert(0, '0')
 
 
 def press_key(event):
+    print(event.char)
     if event.char.isdigit():
-        add_digit(event.char)
-    elif event.char in '/*+-.':
+        add_value(event.char)
+    elif event.char in "+-/*":
         add_operation(event.char)
-    elif event.char == '\r':
-        calculate_button()
-    elif event.char == '\x1b':
-        clear_entry_field()
+    elif event.char in '=' or '\r':
+        calculate()
 
 
-win = tk.Tk()
-win.minsize(240, 260)
-win.maxsize(240, 260)
+def buttons_generator(buttons):
+    for button in buttons:
+        yield button
 
 
-win.update_idletasks()
-s = win.geometry()
-s = s.split('+')
-s = s[0].split('x')
-s_win = s[0]
-width_win = int(s[0])
-height_win = int(s[1])
-w = win.winfo_screenwidth()
-h = win.winfo_screenheight()
-w = w // 2
-h = h // 2
-w = w - width_win // 2
-h = h - height_win // 2
-win.geometry(f'+{w}+{h}')
+root = tk.Tk()
+root.title("Калькулятор")
+root.geometry("300x270+200+200")
+root["bg"] = "orange"
+root.bind('<Key>', press_key)
+calc = tk.Entry(root, justify=tk.RIGHT, font=("Arial", 14), width=20)
+calc.insert(0, '0')
+calc.grid(row=0, column=0, columnspan=5, stick="we", padx=5)
+
+VALUE_BUTTONS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '00', '0', '.']
+CLEAR_BUTTONS = ['\u2190', 'c']
+OPERATION_BUTTONS = ['+', '-', '/', '*', 'x\u00b2']
+EQUAL_BUTTON = ['=']
+
+value_buttons_generator = buttons_generator(VALUE_BUTTONS)
+special_buttons_generator = buttons_generator(
+    CLEAR_BUTTONS + OPERATION_BUTTONS + EQUAL_BUTTON)
 
 
-win.config(bg='orange', relief='raised')
-win.title('Калькулятор')
+for row in range(1, 5):
+    for col in range(5):
+        if 0 <= col <= 2:
+            btn = value_buttons_generator.__next__()
+            make_value_button(btn).grid(
+                row=row, column=col, stick="wens", padx=5, pady=5)
+        else:
+            btn = special_buttons_generator.__next__()
+            if btn in CLEAR_BUTTONS:
+                make_clear_button(btn).grid(
+                    row=row, column=col, stick="wens", padx=5, pady=5)
+            elif btn in OPERATION_BUTTONS:
+                make_operation_button(btn).grid(
+                    row=row, column=col, stick="wens", padx=5, pady=5)
+            else:
+                make_equally_button(btn).grid(
+                    row=row, column=col, stick="wens", padx=5, pady=5)
 
-win.bind('<Key>', press_key)
+for column in range(5):
+    root.grid_columnconfigure(column, minsize=60)
 
-entry_field = tk.Entry(master=win, font='arial', width=15, justify=tk.RIGHT, borderwidth=5)
-entry_field.insert(0, '0')
-entry_field['state'] = tk.DISABLED
-entry_field.grid(row=0, column=0, columnspan=3, stick='we', pady=5, padx=5)
+for row in range(1, 5):
+    root.rowconfigure(row, minsize=60)
 
-tk.Button(text='AC', bg='#dadce0', font='arial', bd=5, command=lambda: clear_entry_field()).grid(row=0, column=4,
-                                                                                                 stick='wens', padx=5,
-                                                                                                 pady=5)
-make_operation_button('/').grid(row=1, column=4, stick='wens', padx=5, pady=5)
-make_operation_button('*').grid(row=2, column=4, stick='wens', padx=5, pady=5)
-make_operation_button('+').grid(row=3, column=4, stick='wens', padx=5, pady=5)
-make_operation_button('-').grid(row=4, column=4, stick='wens', padx=5, pady=5)
+root.mainloop()
 
-tk.Button(text='.', bg='#f1f3f4', font='arial', bd=5, command=lambda: add_digit('.')).grid(row=4, column=1,
-                                                                                           stick='wens', padx=5, pady=5)
-make_calc_button('=').grid(row=4, column=2, stick='wens', padx=5, pady=5)
-tk.Button(text='0', bg='#f1f3f4', font='arial', bd=5, command=lambda: add_digit(0)).grid(row=4, column=0, stick='wens',
-                                                                                         padx=5, pady=5)
-
-make_digit_button('1').grid(row=1, column=0, stick='wens', padx=5, pady=5)
-make_digit_button('2').grid(row=1, column=1, stick='wens', padx=5, pady=5)
-make_digit_button('3').grid(row=1, column=2, stick='wens', padx=5, pady=5)
-make_digit_button('4').grid(row=2, column=0, stick='wens', padx=5, pady=5)
-make_digit_button('5').grid(row=2, column=1, stick='wens', padx=5, pady=5)
-make_digit_button('6').grid(row=2, column=2, stick='wens', padx=5, pady=5)
-make_digit_button('7').grid(row=3, column=0, stick='wens', padx=5, pady=5)
-make_digit_button('8').grid(row=3, column=1, stick='wens', padx=5, pady=5)
-make_digit_button('9').grid(row=3, column=2, stick='wens', padx=5, pady=5)
-
-win.grid_columnconfigure(0, weight=1)
-win.grid_columnconfigure(1, weight=1)
-win.grid_columnconfigure(2, weight=1)
-win.grid_columnconfigure(3, weight=1)
-
-win.grid_rowconfigure(1, weight=1)
-win.grid_rowconfigure(2, weight=1)
-win.grid_rowconfigure(3, weight=1)
-win.grid_rowconfigure(4, weight=1)
-
-win.mainloop()
